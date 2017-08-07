@@ -2,14 +2,12 @@ package bittrex
 
 import (
 	"crypto/hmac"
-	"crypto/tls"
 	"crypto/sha512"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 )
@@ -25,16 +23,8 @@ func NewClient(apiKey, apiSecret string) (c *client) {
 	return &client{apiKey, apiSecret, &http.Client{}}
 }
 
-// Set a proxy address for HTTP requests
-func (c *client) SetProxy(proxy string) (err error) {
-	transport := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
-	}
-	proxyURL, err := url.Parse(proxy)
-	if err != nil {
-		return
-	}
-	transport.Proxy = http.ProxyURL(proxyURL)
+// Set a Transport to client for HTTP requests
+func (c *client) SetTransport(transport *http.Transport) (err error) {
 	c.httpClient.Transport = transport
 	return
 }

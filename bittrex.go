@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"net/http"
 )
 
 const (
@@ -36,8 +37,8 @@ type Bittrex struct {
 	client *client
 }
 
-func (b *Bittrex) SetProxy(proxy string) (err error) {
-	err = b.client.SetProxy(proxy)
+func (b *Bittrex) SetTransport(transport *http.Transport) (err error) {
+	err = b.client.SetTransport(transport)
 	return err
 }
 
