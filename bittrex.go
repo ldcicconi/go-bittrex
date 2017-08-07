@@ -16,7 +16,8 @@ const (
 	DEFAULT_HTTPCLIENT_TIMEOUT = 30                         // HTTP client timeout
 )
 
-// New return a instanciate bittrex struct
+
+// Insantiate bittrex client and return "Bittrex" struct
 func New(apiKey, apiSecret string) *Bittrex {
 	client := NewClient(apiKey, apiSecret)
 	return &Bittrex{client}
@@ -34,6 +35,12 @@ func handleErr(r jsonResponse) error {
 type Bittrex struct {
 	client *client
 }
+
+func (b *Bittrex) SetProxy(proxy string) (err error) {
+	err = b.client.SetProxy(proxy)
+	return err
+}
+
 
 // GetDistribution is used to get the distribution.
 func (b *Bittrex) GetDistribution(market string) (distribution Distribution, err error) {

@@ -2,12 +2,14 @@ package bittrex
 
 import (
 	"crypto/hmac"
+	"crypto/tls"
 	"crypto/sha512"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -21,6 +23,20 @@ type client struct {
 // NewClient return a new Bittrex HTTP client
 func NewClient(apiKey, apiSecret string) (c *client) {
 	return &client{apiKey, apiSecret, &http.Client{}}
+}
+
+// Set a proxy address for HTTP requests
+func (c *client) SetProxy(proxy string) (err error) {
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
+	}
+	proxyURL, err := url.Parse(proxy)
+	if err != nil {
+		return
+	}
+	transport.Proxy = http.ProxyURL(proxyURL)
+	c.httpClient.Transport = transport
+	return
 }
 
 // doTimeoutRequest do a HTTP request with timeout
